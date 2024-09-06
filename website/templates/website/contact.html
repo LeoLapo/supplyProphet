@@ -1,0 +1,22 @@
+{% extends 'website/base.html' %}
+{% block content %}
+{% if success_message %}
+        <p style="color: green;">{{ success_message }}</p>
+    {% elif error_message %}
+        <p style="color: red;">{{ error_message }}</p>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <label for="nickname">Como quer ser chamado(a):</label>
+        <input type="text" id="nickname" name="nickname" required><br>
+
+        <label for="email">E-mail:</label>
+        <input type="email" id="email" name="email"><br>
+
+        <label for="phone">Telefone:</label>
+        <input type="text" id="phone" name="phone"><br>
+
+        <button type="submit">Enviar</button>
+    </form>
+{% endblock %}

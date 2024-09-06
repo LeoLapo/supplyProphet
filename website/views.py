@@ -15,6 +15,7 @@ from django.contrib.auth import authenticate, login as auth_login, logout as aut
 from django.contrib.auth.models import User
 from website.models import CustomUser
 from django.http import HttpResponse
+from django.core.mail import send_mail
 
 User = get_user_model()
 
@@ -169,3 +170,25 @@ def register(request):
             auth_login(request, authenticated_user)
             return redirect('index')  # Redirecionar para a página inicial após o login
     return render(request, 'website/register.html')
+
+def contact(request):
+    success_message = None
+    error_message = None
+
+    if request.method == 'POST':
+        nickname = request.POST.get('nickname')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+
+        if not email and not phone:
+            error_message = "Você precisa fornecer pelo menos um meio de contato: e-mail ou telefone."
+        else:
+            # Aqui você pode configurar o envio de um e-mail ou salvar os dados no banco de dados
+            # Exemplo: send_mail(...)
+
+            success_message = "Mensagem enviada com sucesso!"
+
+    return render(request, 'website/contact.html', {
+        'success_message': success_message,
+        'error_message': error_message
+    })
