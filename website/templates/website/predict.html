@@ -2,44 +2,44 @@
 {% block content %}
 <h1>Realizar Previsão</h1>
     
-    <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data" class="predict_form">
         {% csrf_token %}
         
-        <label for="forecast_name">Nome da previsão:</label>
+        <label for="forecast_name" class="credenciais">Nome da previsão:</label>
         <input type="text" id="forecast_name" name="forecast_name"><br>
         
-        <label for="product_name">Nome do produto:</label>
+        <label for="product_name" class="credenciais">Nome do produto:</label>
         <input type="text" id="product_name" name="product_name"><br>
 
-        <label for="model_options">Selecione os métodos de previsão de demanda:</label>
-        <select id="model_options" name="model_options" multiple>
+        <label for="model_options" class="credenciais">Selecione os métodos de previsão de demanda:</label>
+        <select id="model_options" name="model_options" multiple class="credenciais">
             <option value="ARIMA">ARIMA</option>
             <option value="SARIMA">SARIMA</option>
             <option value="ARMAX">ARMAX</option>
             <option value="PROPHET">PROPHET</option>
         </select><br>
         
-        <label for="granularity">Selecione a granularidade:</label>
+        <label for="granularity" class="credenciais">Selecione a granularidade:</label>
         <select id="granularity" name="granularity">
             <option value="DIA">DIA</option>
             <option value="HORA">HORA</option>
             <option value="MINUTO">MINUTO</option>
         </select><br>
         
-        <label for="test_percentage">Porcentagem de teste:</label>
+        <label for="test_percentage" class="credenciais">Porcentagem de teste:</label>
         <input type="range" id="test_percentage" name="test_percentage" min="60" max="80"><br>
         
-        <label for="forecast_window">Selecione a janela de previsão:</label>
+        <label for="forecast_window" class="credenciais">Selecione a janela de previsão:</label>
         <select id="forecast_window" name="forecast_window">
             <option value="1 mês">1 mês</option>
             <option value="6 meses">6 meses</option>
             <option value="1 ano">1 ano</option>
         </select><br>
         
-        <label for="file">Escolha um arquivo:</label>
+        <label for="file" class="credenciais">Escolha um arquivo:</label>
         <input type="file" id="file" name="file" accept=".xlsx"><br>
 
-        <button type="submit">Realizar previsão</button>
+        <button type="submit" class="submit">Realizar previsão</button>
     </form> 
 
     {% if df_html %}

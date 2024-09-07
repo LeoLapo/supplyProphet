@@ -1,7 +1,7 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: black; /* Fundo preto */
+    /*background-color: black;*/ /* Fundo preto */
     color: white; /* Texto branco */
     font-family: Arial, sans-serif;
     overflow-x: hidden; /* Remove a barra de rolagem horizontal */
@@ -49,4 +49,5 @@ nav ul li a:hover {
     /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); Sombra do card */
     /* box-sizing: border-box; Inclui padding e bordas na largura total */
 }
+
 

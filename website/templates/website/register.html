@@ -1,15 +1,15 @@
 {% extends 'website/base.html' %}
 {% block content %}
-    <h2>Cadastro</h2>
+    <h2 class="tOther">Cadastro</h2>
         {% if error %}
             <p style="color:red;">{{ error }}</p>
         {% endif %}
-        <form method="POST" action="{% url 'register' %}">
+        <form method="POST" action="{% url 'register' %}" class="register_form">
             {% csrf_token %}
-            <label for="email">Email:</label>
+            <label for="email" class="credenciais">Email:</label>
             <input type="email" id="email" name="email" required><br><br>
-            <label for="password">Senha:</label>
+            <label for="password" class="credenciais">Senha:</label>
             <input type="password" id="password" name="password" required><br><br>
-            <button type="submit">Cadastrar</button>
+            <button type="submit" class="submit">Cadastrar</button>
         </form>
 {% endblock %}

@@ -6,17 +6,17 @@
         <p style="color: red;">{{ error_message }}</p>
     {% endif %}
 
-    <form method="post">
+    <form method="post" class="contact_form">
         {% csrf_token %}
-        <label for="nickname">Como quer ser chamado(a):</label>
+        <label for="nickname" class="credenciais">Como quer ser chamado(a):</label>
         <input type="text" id="nickname" name="nickname" required><br>
 
-        <label for="email">E-mail:</label>
+        <label for="email" class="credenciais">E-mail:</label>
         <input type="email" id="email" name="email"><br>
 
-        <label for="phone">Telefone:</label>
+        <label for="phone" class="credenciais">Telefone:</label>
         <input type="text" id="phone" name="phone"><br>
 
-        <button type="submit">Enviar</button>
+        <button type="submit" class="submit">Enviar</button>
     </form>
 {% endblock %}

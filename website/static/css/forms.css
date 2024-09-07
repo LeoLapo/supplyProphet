@@ -1,0 +1,63 @@
+.login_form {
+    padding: 5%;
+    margin: 50px auto;
+    background-color: #f9f9f943;
+    border-radius: 25px;
+    /* Bordas mais arredondadas */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Centraliza itens horizontalmente */
+    justify-content: center;
+    /* Centraliza itens verticalmente */
+}
+
+.register_form {
+    padding: 5%;
+    margin: 50px auto;
+    background-color: #f9f9f943;
+    border-radius: 25px;
+    /* Bordas mais arredondadas */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Centraliza itens horizontalmente */
+    justify-content: center;
+    /* Centraliza itens verticalmente */
+}
+
+.contact_form {
+    padding: 5%;
+    margin: 50px auto;
+    background-color: #f9f9f943;
+    border-radius: 25px;
+    /* Bordas mais arredondadas */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Centraliza itens horizontalmente */
+    justify-content: center;
+    /* Centraliza itens verticalmente */
+}
+
+.predict_form {
+    padding: 5%;
+    margin: 50px auto;
+    background-color: #f9f9f943;
+    border-radius: 25px;
+    /* Bordas mais arredondadas */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Centraliza itens horizontalmente */
+    justify-content: center;
+    /* Centraliza itens verticalmente */
+}
