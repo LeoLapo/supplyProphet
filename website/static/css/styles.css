@@ -1,7 +1,6 @@
 body {
     margin: 0;
     padding: 0;
-    /*background-color: black;*/ /* Fundo preto */
     color: white; /* Texto branco */
     font-family: Arial, sans-serif;
     overflow-x: hidden; /* Remove a barra de rolagem horizontal */
@@ -51,3 +50,18 @@ nav ul li a:hover {
 }
 
 
+
+h1, h2, h3 {
+    font-family: "Bebas Neue", sans-serif;
+    letter-spacing:1.5px;
+}
+
+h1 {
+    font-size: 4em;
+}
+h2 {
+    font-size: 3em;
+}
+h3 {
+    font-size: 2em;
+}

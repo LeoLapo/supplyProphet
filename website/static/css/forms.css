@@ -61,3 +61,7 @@
     justify-content: center;
     /* Centraliza itens verticalmente */
 }
+
+.credenciais {
+    font-family: "Chakra Petch", sans-serif;
+}
