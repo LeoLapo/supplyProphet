@@ -149,7 +149,6 @@ def write_standard_df():
     new_df["Target"] = [100 * random.random() for _ in range(10)]
     return new_df
 
-@login_required(login_url='login')
 def register(request):
     if request.method == 'POST':
         email = request.POST['email']

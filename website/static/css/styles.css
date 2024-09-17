@@ -1,18 +1,19 @@
+/* BODY */
 body {
     margin: 0;
     padding: 0;
-    color: white; /* Texto branco */
+    color: white;
     font-family: Arial, sans-serif;
-    overflow-x: hidden; /* Remove a barra de rolagem horizontal */
-    background-color: #262326;
+    background-color: #262326 !important;
 }
 
+/* NAVEGAÇÃO */
 nav {
-    background-color: #808080; /* Cinza */
+    background-color: #808080;
     padding: 15px;
-    width: 200px; /* Largura do menu */
-    height: 100vh; /* Altura total da tela */
-    position: fixed; /* Fixa o menu na lateral */
+    width: 200px;
+    height: 100vh;
+    position: fixed;
     top: 0;
     left: 0;
 }
@@ -20,15 +21,13 @@ nav {
 nav ul {
     list-style: none;
     padding: 0;
-    margin: 0;
 }
 
 nav ul li {
-    margin: 10px 0; /* Espaçamento entre itens */
+    margin: 10px 0;
 }
 
 nav ul li a {
-    display: block; /* Faz os links ocuparem toda a largura do item */
     color: white;
     text-decoration: none;
     font-size: 18px;
@@ -36,24 +35,21 @@ nav ul li a {
 }
 
 nav ul li a:hover {
-    background-color: #35342F; /* Cor de fundo ao passar o mouse */
-    color: white; /* Cor do texto ao passar o mouse */
+    background-color: #35342F;
     border-radius: 8px;
 }
 
+/* CONTEÚDO */
 .content {
     padding: 5% 27%;
-    /* background-color: #333; Fundo do card */
-    /* border-radius: 8px; Bordas arredondadas */
-    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); Sombra do card */
-    /* box-sizing: border-box; Inclui padding e bordas na largura total */
+    color: white;
 }
 
-
-
+/* CABEÇALHO */
 h1, h2, h3 {
     font-family: "Bebas Neue", sans-serif;
-    letter-spacing:1.5px;
+    letter-spacing: 1.5px;
+    /* color: white; */
 }
 
 h1 {

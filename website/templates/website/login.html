@@ -1,19 +1,25 @@
 {% extends 'website/base.html' %}
 {% block content %}
-    <h2 class="tOther">Login</h2>
-    <form method="POST" action="{% url 'login' %}" class="login_form">
-        {% csrf_token %}
-        <label for="email" class="credenciais">Email:</label>
-        <input type="email" id="email" name="email" required><br><br>
-        <label for="password" class="credenciais">Senha:</label>
-        <input type="password" id="password" name="password" required><br><br>
-        <button type="submit" class="submit">Entrar</button>
-        <br>
-        <div class="other_buttons"> 
-            <a href="#">Entrar com Google</a>
-            <a href="#">Entrar com Outlook</a>
-        </div>
-        <br><br>
-        <a href="{% url 'register' %}" class="cadastro_button">Cadastre-se</a>
-    </form>
+    <div class="container mt-5">
+        <h2 class="tOther text-center">Login</h2>
+        <form method="POST" action="{% url 'login' %}" class="login_form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="email" class="credenciais">Email:</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="password" class="credenciais">Senha:</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+            <div class="other_buttons mt-3 text-center">
+                <button class="btn btn-outline-danger">Entrar com Google</button>
+                <button class="btn btn-outline-info">Entrar com Outlook</button>
+            </div>
+            <div class="text-center mt-4">
+                <a href="{% url 'register' %}" class="cadastro-link">Cadastre-se</a>
+            </div>
+        </form>
+    </div>
 {% endblock %}
