@@ -11,7 +11,7 @@ import random
 from datetime import datetime, timedelta
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout, get_user_model
-# from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from website.models import CustomUser
 from django.http import HttpResponse
@@ -81,6 +81,7 @@ def to_excel(df):
     processed_data = output.getvalue()
     return processed_data
 
+@login_required(login_url='login')
 def predict(request):
     if request.method == 'POST':
         # Verifica se um arquivo foi enviado
@@ -148,7 +149,7 @@ def write_standard_df():
     new_df["Target"] = [100 * random.random() for _ in range(10)]
     return new_df
 
-
+@login_required(login_url='login')
 def register(request):
     if request.method == 'POST':
         email = request.POST['email']
