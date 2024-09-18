@@ -16,6 +16,18 @@ from django.contrib.auth.models import User
 from website.models import CustomUser
 from django.http import HttpResponse
 from django.core.mail import send_mail
+from datetime import timezone
+import firebase_admin
+from firebase_admin import credentials, initialize_app
+
+FIREBASE_SERVICE_ACCOUNT_KEY = './supplyprophet-firebase-adminsdk-kmfel-9ffc14f771.json'
+
+if not firebase_admin._apps:
+    cred = credentials.Certificate(FIREBASE_SERVICE_ACCOUNT_KEY)
+    firebase_admin.initialize_app(cred, {
+        'databaseURL': 'https://supplyprophet-default-rtdb.firebaseio.com/',
+        'storageBucket': 'supplyprophet.appspot.com'
+    })
 
 User = get_user_model()
 
@@ -192,3 +204,144 @@ def contact(request):
         'success_message': success_message,
         'error_message': error_message
     })
+
+class MockPrediction:
+    def __init__(self, forecast_name, product_name, model_options, granularity, test_percentage, forecast_window, created_at):
+        self.forecast_name = forecast_name
+        self.product_name = product_name
+        self.model_options = model_options
+        self.granularity = granularity
+        self.test_percentage = test_percentage
+        self.forecast_window = forecast_window
+        self.created_at = created_at
+
+def mock_predictions():
+    models = ['ARIMA', 'SARIMA', 'ARMAX', 'PROPHET']
+    granularities = ['DIA', 'HORA', 'MINUTO']
+    windows = ['1 mês', '6 meses', '1 ano']
+    predictions = []
+
+    for i in range(10):  # Mocking 10 predictions
+        predictions.append({
+            'id': i,
+            'forecast_name': f'Previsão {i+1}',
+            'product_name': f'Produto {random.choice(["A", "B", "C"])}',
+            'date': datetime.now().strftime('%d/%m/%Y'),
+            'model': random.choice(models),
+            'graph_url': 'https://via.placeholder.com/600x400.png?text=Gr%C3%A1fico+de+Previs%C3%A3o',
+            'details': 'Detalhes sobre a previsão.',
+            'granularity': random.choice(granularities),
+            'test_percentage': random.randint(60, 80),
+            'forecast_window': random.choice(windows)
+        })
+
+    return predictions
+
+def prediction_list(request):
+    # Mocked data for demonstration
+    predictions = [
+        {
+            'id': 1,
+            'forecast_name': 'Forecast 1',
+            'product_name': 'Product A',
+            'date': '2024-09-18',
+            'details': 'Details about this prediction',
+            'granularity': 'Monthly',
+            'test_percentage': 20,
+            'forecast_window': 6,
+            'models': ['SARIMA', 'ARIMA', 'Prophet']  # List of models
+        },
+        {
+            'id': 2,
+            'forecast_name': 'Forecast 2',
+            'product_name': 'Product B',
+            'date': '2024-09-19',
+            'details': 'Details about this prediction',
+            'granularity': 'Weekly',
+            'test_percentage': 15,
+            'forecast_window': 3,
+            'models': ['SARIMA', 'Prophet']  # List of models
+        },
+        # Add more mocked predictions as needed
+    ]
+
+    context = {
+        'predictions': predictions
+    }
+
+    return render(request, 'website/prediction_list.html', context)
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+from firebase_admin import storage
+from firebase_admin import db
+
+# Salvar dados no Realtime Database
+def save_data_to_realtime_db(data, path):
+    ref = db.reference(path)
+    ref.set(data)
+
+# Ler dados do Realtime Database
+def get_data_from_realtime_db(path):
+    ref = db.reference(path)
+    return ref.get()
+
+# Fazer upload de um arquivo
+def upload_file_to_storage(file, bucket_name, storage_path):
+    bucket = storage.bucket(name=bucket_name)
+    blob = bucket.blob(storage_path)
+    blob.upload_from_file(file)
+    return blob.public_url
+
+# Fazer download de um arquivo
+def download_file_from_storage(storage_path, local_file_path, bucket_name):
+    bucket = storage.bucket(name=bucket_name)
+    blob = bucket.blob(storage_path)
+    blob.download_to_filename(local_file_path)
+
+@csrf_exempt
+def save_data_view(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        path = data.get('path')
+        content = data.get('content')
+        save_data_to_realtime_db(content, path)
+        return JsonResponse({'status': 'success'})
+
+@csrf_exempt
+def get_data_view(request):
+    if request.method == 'GET':
+        path = request.GET.get('path')
+        data = get_data_from_realtime_db(path)
+        return JsonResponse({'data': data})
+import io
+@csrf_exempt
+def upload_file_view(request):
+    if request.method == 'POST' and request.FILES:
+        file = request.FILES['file']
+        bucket_name = 'your-firebase-bucket'
+        storage_path = 'uploads/' + file.name
+        
+        # Convert the file to a BytesIO object
+        file_io = io.BytesIO(file.read())
+        
+        # Upload to Firebase Storage
+        public_url = upload_file_to_storage(file_io, bucket_name, storage_path)
+        
+        return JsonResponse({'status': 'success', 'url': public_url})
+    return JsonResponse({'status': 'error', 'message': 'No file uploaded'}, status=400)
+
+@csrf_exempt
+def download_file_view(request):
+    if request.method == 'GET':
+        file_name = request.GET.get('file_name')
+        local_path = '/tmp/' + file_name
+        bucket_name = 'your-firebase-bucket'
+        storage_path = 'uploads/' + file_name
+        download_file_from_storage(storage_path, local_path, bucket_name)
+        with open(local_path, 'rb') as f:
+            response = HttpResponse(f.read(), content_type='application/octet-stream')
+            response['Content-Disposition'] = f'attachment; filename="{file_name}"'
+            return response

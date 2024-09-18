@@ -2,7 +2,7 @@
 {% block content %}
 <h2>Realizar Previsão</h2>
     
-    <form method="post" enctype="multipart/form-data" class="predict_form">
+    <form method="post" action="{% url 'upload_file' %}"  enctype="multipart/form-data" class="predict_form">
         {% csrf_token %}
         
         <label for="forecast_name" class="credenciais">Nome da previsão:</label>

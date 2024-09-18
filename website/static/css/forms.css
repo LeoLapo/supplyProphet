@@ -1,13 +1,80 @@
-/* Reduzido para aproveitar as classes do Bootstrap */
-.login_form, .register_form, .contact_form, .predict_form {
-    background-color: #f9f9f943;
-    border-radius: 25px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 2rem;
-    margin: 3rem auto;
-    /* max-width: 500px; Limita a largura do formulário */
+/* General Body Styling */
+body {
+    margin: 0;
+    padding: 0;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    background-color: #262326 !important;
+    line-height: 1.6;
 }
 
-.credenciais {
+/* CONTACT FORM STYLING */
+.contact_form {
+    background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent form background */
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Softer shadow */
+    padding: 2.5rem;
+    margin: 3rem auto;
+    max-width: 600px;
+    backdrop-filter: blur(10px); /* Frosted glass effect */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border for distinction */
+}
+
+.contact_form input, .contact_form button {
+    width: 100%;
+    padding: 12px 15px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.15);
+    color: white;
+    font-size: 16px;
+    font-family: 'Roboto', sans-serif;
+    transition: background 0.3s ease;
+}
+
+.contact_form input:focus {
+    background-color: rgba(255, 255, 255, 0.25);
+    outline: none;
+    box-shadow: 0 0 8px rgba(0, 229, 255, 0.8); /* Neon focus effect */
+}
+
+.contact_form label {
     font-family: "Chakra Petch", sans-serif;
+    color: #00e5ff;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+/* Submit Button */
+.contact_form button.submit {
+    background-color: #00e5ff;
+    color: #262326;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: background 0.3s ease;
+    border-radius: 8px;
+}
+
+.contact_form button.submit:hover {
+    background-color: #00a0b6;
+}
+
+/* Success/Error Messages */
+.success-message {
+    color: green;
+    font-family: "Roboto", sans-serif;
+    font-size: 1rem;
+    margin: 20px 0;
+}
+
+.error-message {
+    color: red;
+    font-family: "Roboto", sans-serif;
+    font-size: 1rem;
+    margin: 20px 0;
 }

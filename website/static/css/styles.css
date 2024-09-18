@@ -2,62 +2,272 @@
 body {
     margin: 0;
     padding: 0;
-    color: white;
-    font-family: Arial, sans-serif;
-    background-color: #262326 !important;
+    color: #f0f0f0; /* Texto mais claro para contraste */
+    font-family: 'Roboto', sans-serif;
+    background-color: #262626; /* Cor de fundo escura */
+    line-height: 1.6;
 }
 
 /* NAVEGAÇÃO */
 nav {
-    background-color: #808080;
-    padding: 15px;
-    width: 200px;
+    background: linear-gradient(135deg, #1f1f1f, #333);
+    padding: 20px;
+    width: 250px;
     height: 100vh;
     position: fixed;
     top: 0;
     left: 0;
+    box-shadow: 5px 0 20px rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 nav ul {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
 nav ul li {
-    margin: 10px 0;
+    margin: 20px 0;
 }
 
 nav ul li a {
-    color: white;
+    color: #f0f0f0; /* Cor do texto */
     text-decoration: none;
     font-size: 18px;
-    padding: 10px;
+    padding: 15px 20px;
+    display: block;
+    border-radius: 8px; /* Bordas mais suaves */
+    transition: background 0.4s ease, padding-left 0.4s ease;
+    font-weight: 500;
+    position: relative;
+}
+
+nav ul li a::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background-color: transparent;
+    transition: background-color 0.4s ease;
 }
 
 nav ul li a:hover {
-    background-color: #35342F;
-    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    padding-left: 30px;
+    text-decoration: none;
+}
+
+nav ul li a:hover::before {
+    background-color: #00e5ff;
+}
+
+nav ul li a.active {
+    background: #353535; /* Cor de fundo quando ativo */
+    color: #00e5ff;
+    padding-left: 30px;
+}
+
+nav ul li a.active::before {
+    background-color: #00e5ff;
+}
+
+/* MOBILE FRIENDLY NAV */
+@media (max-width: 768px) {
+    nav {
+        width: 100vw;
+        height: auto;
+        padding: 15px;
+        position: relative;
+    }
+
+    nav ul {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    nav ul li {
+        margin: 0;
+    }
+
+    nav ul li a {
+        padding: 10px;
+        font-size: 16px;
+    }
 }
 
 /* CONTEÚDO */
 .content {
-    padding: 5% 27%;
-    color: white;
+    padding: 5% 10%; /* Ajuste de padding para melhorar o layout */
+    color: #f0f0f0;
+    background-color: #1e1e1e; /* Fundo levemente mais claro */
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    margin-left: 270px; /* Ajusta a margem para o conteúdo não sobrepor a navegação fixa */
 }
 
-/* CABEÇALHO */
-h1, h2, h3 {
-    font-family: "Bebas Neue", sans-serif;
-    letter-spacing: 1.5px;
-    /* color: white; */
+/* FORMULÁRIOS */
+.predict_form, .contact_form, .login_form {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    padding: 2rem;
+    margin: 2rem auto; /* Margem reduzida para mais consistência */
+    max-width: 600px;
+    backdrop-filter: blur(8px); /* Blur mais suave */
 }
 
-h1 {
-    font-size: 4em;
+.predict_form input, .predict_form select, .predict_form button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #f0f0f0;
+    font-size: 16px;
+    font-family: 'Roboto', sans-serif;
 }
+
+.predict_form input[type="range"] {
+    width: calc(100% - 20px);
+    padding: 5px;
+}
+
+.predict_form button.submit {
+    background-color: #00e5ff;
+    color: #262626;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.predict_form button.submit:hover {
+    background-color: #00a0b6;
+}
+
+/* TEXTOS */
+.credenciais {
+    font-family: "Chakra Petch", sans-serif;
+    color: #00e5ff;
+    font-size: 1.1rem;
+}
+
 h2 {
-    font-size: 3em;
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+    color: #00e5ff;
+    text-align: center;
+    margin-bottom: 1rem;
 }
-h3 {
-    font-size: 2em;
+
+/* TABELAS */
+.df-table {
+    margin: 2rem 0;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 1rem;
+    color: #f0f0f0;
+    width: 100%;
+}
+
+.df-table th, .df-table td {
+    padding: 12px;
+    text-align: left;
+}
+
+/* Prediction List Styles */
+.prediction-list {
+    margin: 2rem auto;
+    max-width: 900px;
+}
+
+.prediction-item {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.prediction-item:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.7);
+}
+
+.details-btn {
+    background-color: #00e5ff;
+    color: #262626;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s ease;
+}
+
+.details-btn:hover {
+    background-color: #00a0b6;
+}
+
+.details {
+    display: none;
+    margin-top: 1rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.details-content {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 1rem;
+}
+
+.graph-container {
+    position: relative;
+}
+
+.graph-selector {
+    margin-bottom: 1rem;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #f0f0f0;
+    font-size: 16px;
+    transition: background 0.3s ease;
+}
+
+.graph-selector:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.details-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.details-content h4 {
+    color: #00e5ff;
+    font-size: 1.2rem;
+}
+
+.details-content p {
+    font-size: 1rem;
+    color: #f0f0f0;
+}
+
+.graph-container {
+    background-color: #1e1d1d; /* Fundo mais claro para o gráfico */
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
 }

@@ -1,0 +1,190 @@
+{% extends 'website/base.html' %}
+{% block content %}
+<h2>Lista de Previsões</h2>
+
+<div class="prediction-list">
+    {% for prediction in predictions %}
+        <div class="prediction-item">
+            <h3>{{ prediction.forecast_name }} - {{ prediction.product_name }}</h3>
+            <p><strong>Data:</strong> {{ prediction.date }}</p>
+            
+            <button class="details-btn" onclick="toggleDetails('{{ prediction.id }}')">Mostrar Detalhes</button>
+            
+            <div id="details-{{ prediction.id }}" class="details">
+                <div class="details-content">
+                    <h4>Escolha o Modelo:</h4>
+                    <select class="graph-selector" onchange="updateGraph('{{ prediction.id }}', this.value)">
+                        {% for model in prediction.models %}
+                            <option value="{{ model }}">{{ model }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <h4>Gráfico de Previsão:</h4>
+                    <div class="graph-container">
+                        <canvas id="graph-{{ prediction.id }}" width="600" height="400"></canvas>
+                    </div>
+
+                    <h4>Detalhes:</h4>
+                    <p>{{ prediction.details }}</p>
+
+                    <h4>Granularidade:</h4>
+                    <p>{{ prediction.granularity }}</p>
+                    
+                    <h4>Porcentagem de Teste:</h4>
+                    <p>{{ prediction.test_percentage }}%</p>
+                    
+                    <h4>Janela de Previsão:</h4>
+                    <p>{{ prediction.forecast_window }}</p>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    function toggleDetails(id) {
+        const details = document.getElementById('details-' + id);
+        const isVisible = details.style.display === 'block';
+        document.querySelectorAll('.details').forEach(el => {
+            el.style.display = 'none';
+            el.style.opacity = '0';
+        });
+        details.style.display = isVisible ? 'none' : 'block';
+        if (!isVisible) {
+            setTimeout(() => {
+                details.style.opacity = '1';
+                renderGraph(id);  // Render initial graph
+            }, 100); // Add slight delay for smooth transition
+        }
+    }
+
+    function updateGraph(id, model) {
+        renderGraph(id, model);
+    }
+
+    function getGraphData(id, model) {
+        // Mocked data generation based on the model
+        const totalMonths = 12;
+        const trainMonths = 5;
+        const testMonths = 2;
+        const forecastMonths = 5;
+
+        const labels = Array.from({ length: totalMonths }, (_, i) => `Mês ${i + 1}`);
+        const allData = Array.from({ length: totalMonths }, (_, i) => Math.sin(i / 2) * 10 + Math.random() * 10);
+
+        const trainEndIndex = trainMonths;
+        const testEndIndex = trainEndIndex + testMonths;
+
+        const trainData = allData.slice(0, trainEndIndex);
+        const testData = allData.slice(trainEndIndex, testEndIndex);
+        const forecastData = Array.from({ length: forecastMonths }, (_, i) => allData[testEndIndex - 1] + (i + 1) * (Math.random() * 5 - 2.5));
+
+        const trainTestData = trainData.concat(Array(testMonths).fill(null)).concat(testData);
+        const forecastDataExtended = Array(trainMonths + testMonths).fill(null).concat(forecastData);
+
+        return {
+            labels: labels,
+            train: trainData.concat(Array(testMonths).fill(null)).concat(Array(forecastMonths).fill(null)),
+            test: Array(trainMonths).fill(null).concat(testData).concat(Array(forecastMonths).fill(null)),
+            forecast: Array(trainMonths + testMonths).fill(null).concat(forecastData)
+        };
+    }
+
+    function renderGraph(id, model) {
+        const ctx = document.getElementById('graph-' + id).getContext('2d');
+        const data = getGraphData(id, model);
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.labels,
+                datasets: [
+                    {
+                        label: 'Treinamento',
+                        data: data.train,
+                        borderColor: '#FF5733',
+                        borderWidth: 2,
+                        fill: false,
+                        spanGaps: true
+                    },
+                    {
+                        label: 'Teste',
+                        data: data.test,
+                        borderColor: '#33FF57',
+                        borderWidth: 2,
+                        fill: false,
+                        spanGaps: true
+                    },
+                    {
+                        label: 'Previsão',
+                        data: data.forecast,
+                        borderColor: '#3357FF',
+                        borderWidth: 2,
+                        fill: false,
+                        spanGaps: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#FFFFFF' // White color for legend text
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#333', // Dark background for tooltips
+                        titleColor: '#FFFFFF', // White color for tooltip titles
+                        bodyColor: '#FFFFFF' // White color for tooltip body
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: '#FFFFFF' // White color for x-axis labels
+                        },
+                        grid: {
+                            color: '#444' // Darker grid lines for better contrast
+                        },
+                        title: {
+                            color: '#FFFFFF', // White color for x-axis title
+                            display: true,
+                            text: 'Tempo'
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: '#FFFFFF' // White color for y-axis labels
+                        },
+                        grid: {
+                            color: '#444' // Darker grid lines for better contrast
+                        },
+                        title: {
+                            color: '#FFFFFF', // White color for y-axis title
+                            display: true,
+                            text: 'Valor'
+                        }
+                    }
+                }
+            }
+        });
+    }
+</script>
+
+<style>
+    /* Custom styling for the dropdown */
+    .graph-selector {
+        background-color: #333; /* Dark background for better contrast */
+        color: #FFF; /* White text color */
+        border: 1px solid #444; /* Slightly lighter border */
+        padding: 5px; /* Add some padding for better appearance */
+        border-radius: 5px; /* Rounded corners */
+    }
+    .graph-selector option {
+        background-color: #333; /* Dark background for dropdown options */
+        color: #FFF; /* White text color */
+    }
+</style>
+{% endblock %}
