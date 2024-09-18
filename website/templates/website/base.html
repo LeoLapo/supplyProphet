@@ -21,6 +21,7 @@
             <li><a href="{% url 'contact' %}">Contato</a></li>
             {% if user.is_authenticated %}
                 <li><a href="{% url 'predict' %}">Previsão</a></li>
+                <li><a href="{% url 'prediction_list' %}">Lista de previsões</a></li>
                 <li><a href="{% url 'logout' %}">Logout</a></li>
             {% endif %}
         </ul>

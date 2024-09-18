@@ -1,22 +1,30 @@
 {% extends 'website/base.html' %}
+
 {% block content %}
-{% if success_message %}
-        <p style="color: green;">{{ success_message }}</p>
+    {% if success_message %}
+        <p class="success-message">{{ success_message }}</p>
     {% elif error_message %}
-        <p style="color: red;">{{ error_message }}</p>
+        <p class="error-message">{{ error_message }}</p>
     {% endif %}
-<h2>Contato</h2>
-    <form method="post" class="contact_form">
+
+    <h2>Contato</h2>
+    <form method="post" enctype="multipart/form-data" action="{% url 'upload_file' %}" class="contact_form">
         {% csrf_token %}
+        
         <label for="nickname" class="credenciais">Como quer ser chamado(a):</label>
         <input type="text" id="nickname" name="nickname" required><br>
-
+    
         <label for="email" class="credenciais">E-mail:</label>
         <input type="email" id="email" name="email"><br>
-
+    
         <label for="phone" class="credenciais">Telefone:</label>
         <input type="text" id="phone" name="phone"><br>
-
+    
+        <label for="file" class="credenciais">Escolha um arquivo:</label>
+        <input type="file" id="file" name="file" accept=".xlsx" required><br>
+    
         <button type="submit" class="submit">Enviar</button>
     </form>
+    
+    
 {% endblock %}
