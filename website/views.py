@@ -84,17 +84,6 @@ def to_excel(df):
 @login_required(login_url='login')
 def predict(request):
     if request.method == 'POST':
-        # Verifica se um arquivo foi enviado
-        if 'file' in request.FILES:
-            uploaded_file = request.FILES['file']
-            try:
-                # Processa o arquivo Excel
-                df = pd.read_excel(uploaded_file)
-                df_html = df.to_html()
-            except Exception as e:
-                return HttpResponse(f"Erro ao processar o arquivo: {str(e)}", status=400)
-        else:
-            df_html = None
 
         # Coleta outros dados do formulário
         forecast_name = request.POST.get('forecast_name', '')
@@ -104,9 +93,46 @@ def predict(request):
         test_percentage = request.POST.get('test_percentage', '')
         forecast_window = request.POST.get('forecast_window', '')
 
+        # Verifica se um arquivo foi enviado
+        if 'file' in request.FILES:
+            uploaded_file = request.FILES['file']
+            try:             
+                # Processa o arquivo Excel
+                df = pd.read_excel(uploaded_file)
+
+                df_media = df["quantidade vendas"].rolling(5).mean()
+
+                datas_setembro = pd.date_range(start='2024-09-01', end='2024-09-30', freq='D')
+                df_setembro = pd.DataFrame(datas_setembro, columns=['Data'])
+
+                df_marge = pd.concat([df_setembro, df_media], axis=1)
+                df_marge['Data'] = df_marge['Data'].dt.date
+
+                plt.figure(figsize=(10, 6))
+                plt.plot(df_marge['Data'], df_marge['quantidade vendas'], marker='o')
+                plt.title(f"Gráfico previsões vendas de {product_name}")
+                plt.xlabel('data')
+                plt.ylabel('demanda')
+
+                buffer = BytesIO()
+                plt.savefig(buffer, format='png')
+                buffer.seek(0)
+                image_png = buffer.getvalue()
+                buffer.close()
+                graphic = base64.b64encode(image_png).decode('utf-8')
+
+                df_html = df_marge.T.to_html()
+            except Exception as e:
+                return HttpResponse(f"Erro ao processar o arquivo: {str(e)}", status=400)
+        else:
+            df_html = None
+
+
+
         # Aqui você pode adicionar lógica para processar os dados do formulário
 
         return render(request, 'website/predict.html', {
+            'graphic': graphic,
             'df_html': df_html,
             'forecast_name': forecast_name,
             'product_name': product_name,
