@@ -43,8 +43,10 @@
     </form> 
 
     {% if df_html %}
-        <h2>Dados do Arquivo:</h2>
         <div>
+            <h2>Gráfico de previsão:</h2>
+            <img src="data:image/png;base64,{{ graphic }}" alt="Gráfico de Previsão">
+            <h2>Dados de previsão:</h2>
             {{ df_html|safe }}
         </div>
     {% endif %} 
