@@ -14,14 +14,17 @@ from django.contrib.auth import authenticate, login as auth_login, logout as aut
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from website.models import CustomUser
-from django.http import HttpResponse
-from django.core.mail import send_mail
-from datetime import timezone
+from django.http import HttpResponse, JsonResponse
+import json
+import io
+from django.views.decorators.csrf import csrf_exempt
+from firebase_admin import credentials, initialize_app, storage, db
+import google.auth.exceptions
 import firebase_admin
-from firebase_admin import credentials, initialize_app
 
-FIREBASE_SERVICE_ACCOUNT_KEY = './supplyprophet-firebase-adminsdk-kmfel-9ffc14f771.json'
+FIREBASE_SERVICE_ACCOUNT_KEY = './supplyprophet-firebase-adminsdk-kmfel-01f1fab38e.json'
 
+# Inicializa o Firebase apenas uma vez
 if not firebase_admin._apps:
     cred = credentials.Certificate(FIREBASE_SERVICE_ACCOUNT_KEY)
     firebase_admin.initialize_app(cred, {
@@ -55,7 +58,6 @@ def index(request):
     # Passar o gráfico para o template
     context = {'graphic': graphic}
     return render(request, 'website/index.html', context)
-
 
 def login(request):
     if request.method == 'POST':
@@ -316,10 +318,19 @@ def get_data_from_realtime_db(path):
 
 # Fazer upload de um arquivo
 def upload_file_to_storage(file, bucket_name, storage_path):
-    bucket = storage.bucket(name=bucket_name)
-    blob = bucket.blob(storage_path)
-    blob.upload_from_file(file)
-    return blob.public_url
+    try:
+        bucket = storage.bucket(name=bucket_name)
+        blob = bucket.blob(storage_path)
+        blob.upload_from_file(file)
+        return blob.public_url
+    except google.auth.exceptions.RefreshError as e:
+        # Captura erro específico de JWT
+        print(f"Erro de autenticação JWT: {e}")
+        raise
+    except Exception as e:
+        # Captura outros erros
+        print(f"Erro ao fazer upload para o Firebase Storage: {e}")
+        raise
 
 # Fazer download de um arquivo
 def download_file_from_storage(storage_path, local_file_path, bucket_name):
@@ -333,31 +344,42 @@ def save_data_view(request):
         data = json.loads(request.body)
         path = data.get('path')
         content = data.get('content')
-        save_data_to_realtime_db(content, path)
-        return JsonResponse({'status': 'success'})
+        try:
+            save_data_to_realtime_db(content, path)
+            return JsonResponse({'status': 'success'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+
 
 @csrf_exempt
 def get_data_view(request):
     if request.method == 'GET':
         path = request.GET.get('path')
-        data = get_data_from_realtime_db(path)
-        return JsonResponse({'data': data})
-import io
+        try:
+            data = get_data_from_realtime_db(path)
+            return JsonResponse({'data': data})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
 @csrf_exempt
 def upload_file_view(request):
     if request.method == 'POST' and request.FILES:
         file = request.FILES['file']
-        bucket_name = 'your-firebase-bucket'
+        bucket_name = 'supplyprophet.appspot.com'
         storage_path = 'uploads/' + file.name
-        
-        # Convert the file to a BytesIO object
+
+        # Convertendo o arquivo para um objeto BytesIO
         file_io = io.BytesIO(file.read())
-        
-        # Upload to Firebase Storage
-        public_url = upload_file_to_storage(file_io, bucket_name, storage_path)
-        
-        return JsonResponse({'status': 'success', 'url': public_url})
+
+        # Upload para o Firebase Storage
+        try:
+            public_url = upload_file_to_storage(file_io, bucket_name, storage_path)
+            return JsonResponse({'status': 'success', 'url': public_url})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
     return JsonResponse({'status': 'error', 'message': 'No file uploaded'}, status=400)
+
 
 @csrf_exempt
 def download_file_view(request):
